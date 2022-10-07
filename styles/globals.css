@@ -16,7 +16,7 @@ a {
 }
 #blue {
   background-color: blue;
-  height: 90vh;
+  height: 90px; /*vh*/
 }
 img {
   width: 100%;

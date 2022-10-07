@@ -16,7 +16,7 @@ export default function Home({ categories }) {
           <ul>
             {categories.map((category, index) => (
               <li key={index}>
-                <Link href={`/categories/${category.category}`}>
+                <Link href={`/categories/${category.category}?page=1`}>
                   <a>{category.category}</a>
                 </Link>
               </li>

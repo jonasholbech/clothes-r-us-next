@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getCategories } from "../../lib/api";
 import Layout from "../../components/Layout";
+import Pagination from "../../components/Pagination";
 import styles from "../../styles/Category.module.css";
 import Image from "next/future/image";
 import { useRouter } from "next/router";
@@ -8,7 +9,7 @@ import { useBasketDispatch } from "../../contexts/BasketContext";
 function Category({ articles }) {
   const dispatch = useBasketDispatch();
   const router = useRouter();
-  const { slug } = router.query;
+  const { slug, page = 0 } = router.query;
   function addToBasket(item) {
     dispatch({
       type: "added",
@@ -24,7 +25,7 @@ function Category({ articles }) {
       <div className={styles.productGrid}>
         {articles.map((item) => (
           <article key={item.id}>
-            <Link href={`/categories/${slug}/${item.id}`}>
+            <Link href={`/categories/${slug}/${item.id}`} prefetch={false}>
               <a>
                 {item.productdisplayname}
                 <Image
@@ -39,14 +40,21 @@ function Category({ articles }) {
           </article>
         ))}
       </div>
+      <Pagination />
     </Layout>
   );
 }
 //TODO: pagination
+//det skal være den her logik (desværre?), eller client rendered
+//https://github.com/vercel/next.js/discussions/10987
+//pages/category/[category]/[page].js så [slug][id] skal flyttes til [category]/product/[id]?
+
 export async function getStaticProps({ params }) {
-  console.log(params);
+  console.log("heres the", params);
   const res = await fetch(
-    `https://kea-alt-del.dk/t7/api/products?category=${params.slug}&limit=100`
+    `https://kea-alt-del.dk/t7/api/products?category=${
+      params.slug
+    }&limit=10&start=${params.page * 10}`
   );
   const articles = await res.json();
 
@@ -58,13 +66,20 @@ export async function getStaticPaths() {
   const categories = await getCategories();
 
   // Get the paths we want to pre-render based on posts
-  const paths = categories.map((post) => ({
-    params: { slug: post.category },
-  }));
+  const paths = [];
+  /* const paths = categories.map((post) => {
+   // return { params: { slug: post.category } };
+   
+  }); */
+  categories.forEach((cat) => {
+    for (let i = 0; i < 10; i++) {
+      paths.push({ params: { slug: cat.category, page: i } });
+    }
+  });
 
   // We'll pre-render only these paths at build time.
   // { fallback: false } means other routes should 404.
-  return { paths, fallback: false };
+  return { paths, fallback: true };
 }
 
 export default Category;
