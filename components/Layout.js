@@ -1,7 +1,8 @@
 import Head from "next/head";
+import Navigation from "../components/Navigation";
 //import styles from './layout.module.css'
 import { useBasket } from "../contexts/BasketContext";
-export default function Layout({ children, title = "Clothes-R-Us" }) {
+export default function Layout({ children, title = "Clothes-R-Us", menu }) {
   const context = useBasket();
   return (
     <>
@@ -9,7 +10,7 @@ export default function Layout({ children, title = "Clothes-R-Us" }) {
         <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1>I&apos;m Layout</h1>
+      <Navigation menu={menu} />
       <p>In basket: {context.length}</p>
       <main>{children}</main>
     </>

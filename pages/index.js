@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
@@ -7,7 +6,7 @@ import { getCategories } from "../lib/api";
 import Layout from "../components/Layout";
 export default function Home({ categories }) {
   return (
-    <Layout title="yeah">
+    <Layout title="yeah" menu={categories}>
       <div className={styles.container}>
         <main className={styles.main}>
           <h1 className={styles.title}>
@@ -16,7 +15,7 @@ export default function Home({ categories }) {
           <ul>
             {categories.map((category, index) => (
               <li key={index}>
-                <Link href={`/categories/${category.category}?page=1`}>
+                <Link href={`/categories/${category.category}`}>
                   <a>{category.category}</a>
                 </Link>
               </li>

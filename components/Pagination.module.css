@@ -1,0 +1,12 @@
+.pagination {
+  display: flex;
+  gap: 1rem;
+  list-style-type: none;
+}
+.pagination a {
+  color: blue;
+  padding: 1rem;
+}
+.pagination .active {
+  color: red;
+}

@@ -1,8 +1,9 @@
-import Layout from "../../../components/Layout";
+import Layout from "../../components/Layout";
 import Image from "next/image";
-function Product({ id, productdisplayname }) {
+import { getCategories } from "../../lib/api";
+function Product({ id, productdisplayname, categories }) {
   return (
-    <Layout title={productdisplayname}>
+    <Layout title={productdisplayname} menu={categories}>
       <h2>{productdisplayname}</h2>
       <Image
         src={`https://kea-alt-del.dk/t7/images/webp/640/${id}.webp`}
@@ -21,12 +22,12 @@ export async function getStaticProps({ params }) {
     `https://kea-alt-del.dk/t7/api/products/${params.id}`
   );
   const data = await res.json();
-
+  const categories = await getCategories();
   // Pass post data to the page via props
   //reduce amoun t of data in .json file
   //TODO: samme i slug?
   let { id, productdisplayname } = data;
-  return { props: { id, productdisplayname } };
+  return { props: { id, productdisplayname, categories } };
 }
 
 export async function getStaticPaths() {
